@@ -3,63 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hAITerapis Prototype</title>
+    <title>hAITerapis - Prototype</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Sembunyikan halaman yang tidak aktif */
         .page { display: none; }
-        .active { display: block; }
-        /* Agar gambar pas dengan layar HP */
-        .mobile-img {
+        .page.active { display: block; }
+        
+        /* Agar gambar pas dengan ukuran layar simulasi HP */
+        .mobile-screen-img {
             width: 100%;
-            height: auto;
-            display: block;
+            height: 100%;
+            object-fit: contain;
+            background-color: #f3f4f6;
         }
+
+        /* Hilangkan scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-gray-100 flex justify-center items-center min-h-screen p-4">
+<body class="bg-gray-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
 
-    <div class="relative bg-black p-3 rounded-[3rem] shadow-2xl w-[375px] h-[750px] border-4 border-gray-800 overflow-hidden">
+    <h2 class="mb-4 text-xl font-bold text-gray-700">Preview hAITerapis</h2>
+
+    <div class="relative bg-black p-3 rounded-[3rem] shadow-2xl w-[360px] h-[720px] border-4 border-gray-800 overflow-hidden">
         
-        <div class="bg-white rounded-[2.2rem] h-full w-full overflow-y-auto no-scrollbar relative">
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl z-50"></div>
+
+        <div class="bg-white rounded-[2rem] h-full w-full overflow-hidden relative shadow-inner">
             
-            <div id="p1" class="page active">
-                <img src="Tampilan-1.png" alt="Beranda" class="mobile-img">
+            <div id="page1" class="page active h-full w-full">
+                <img src="Tampilan-1.png" alt="Tampilan 1" class="mobile-screen-img">
             </div>
 
-            <div id="p2" class="page">
-                <img src="Tampilan-2.png" alt="Matching AI" class="mobile-img">
+            <div id="page2" class="page h-full w-full">
+                <img src="Tampilan-2.png" alt="Tampilan 2" class="mobile-screen-img">
             </div>
 
-            <div id="p3" class="page">
-                <img src="Tampilan-3.png" alt="Jadwal" class="mobile-img">
+            <div id="page3" class="page h-full w-full">
+                <img src="Tampilan-3.png" alt="Tampilan 3" class="mobile-screen-img">
             </div>
 
-            <div id="p4" class="page">
-                <img src="Tampilan-4.png" alt="Profil" class="mobile-img">
+            <div id="page4" class="page h-full w-full">
+                <img src="Tampilan-4.png" alt="Tampilan 4" class="mobile-screen-img">
             </div>
 
-            <div id="p5" class="page">
-                <img src="Tampilan-5.png" alt="Logbook" class="mobile-img">
+            <div id="page5" class="page h-full w-full">
+                <img src="Tampilan-5.png" alt="Tampilan 5" class="mobile-screen-img">
             </div>
 
         </div>
 
-        <div class="absolute bottom-10 left-0 w-full flex justify-center gap-2 px-4">
-            <button onclick="show(1)" class="bg-white/20 hover:bg-white/50 text-[10px] p-2 rounded-full text-white border border-white/30">1</button>
-            <button onclick="show(2)" class="bg-white/20 hover:bg-white/50 text-[10px] p-2 rounded-full text-white border border-white/30">2</button>
-            <button onclick="show(3)" class="bg-white/20 hover:bg-white/50 text-[10px] p-2 rounded-full text-white border border-white/30">3</button>
-            <button onclick="show(4)" class="bg-white/20 hover:bg-white/50 text-[10px] p-2 rounded-full text-white border border-white/30">4</button>
-            <button onclick="show(5)" class="bg-white/20 hover:bg-white/50 text-[10px] p-2 rounded-full text-white border border-white/30">5</button>
+        <div class="absolute bottom-6 left-0 w-full flex justify-center gap-3 z-50">
+            <button onclick="changePage(1)" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 border border-white/50 text-white font-bold backdrop-blur-sm">1</button>
+            <button onclick="changePage(2)" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 border border-white/50 text-white font-bold backdrop-blur-sm">2</button>
+            <button onclick="changePage(3)" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 border border-white/50 text-white font-bold backdrop-blur-sm">3</button>
+            <button onclick="changePage(4)" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 border border-white/50 text-white font-bold backdrop-blur-sm">4</button>
+            <button onclick="changePage(5)" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 border border-white/50 text-white font-bold backdrop-blur-sm">5</button>
         </div>
+
     </div>
 
+    <p class="mt-6 text-sm text-gray-500 text-center px-4">
+        Klik angka 1-5 di bawah layar HP untuk melihat setiap tampilan desain kamu.
+    </p>
+
     <script>
-        function show(num) {
-            // Sembunyikan semua gambar
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            // Tampilkan gambar yang dipilih
-            document.getElementById('p' + num).classList.add('active');
+        function changePage(pageNum) {
+            // Sembunyikan semua halaman dengan menghapus kelas 'active'
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Tampilkan halaman yang dipilih dengan menambah kelas 'active'
+            const selectedPage = document.getElementById('page' + pageNum);
+            if (selectedPage) {
+                selectedPage.classList.add('active');
+            }
         }
     </script>
+
 </body>
 </html>
