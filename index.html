@@ -3,68 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hAITerapis - Prototype</title>
+    <title>hAITerapis - Preview</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .page { display: none; height: 100%; width: 100%; }
-        .page.active { display: block; }
+        /* Menghilangkan scrollbar agar bersih */
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #f0f2f5; }
+        .page { display: none; height: 100vh; width: 100vw; }
+        .page.active { display: flex; justify-content: center; align-items: center; }
         
-        /* Teknik Zoom-In: Mengambil bagian tengah gambar agar memenuhi layar */
-        .mobile-screen-img {
-            width: 100%;
+        /* Menampilkan gambar asli kamu secara utuh dan proporsional */
+        .mobile-img {
             height: 100%;
-            object-fit: cover; /* Ini yang akan membuat gambar memenuhi layar */
-            object-position: center; /* Fokus ke tengah gambar */
+            width: auto;
+            max-width: 100%;
+            object-fit: contain; /* Menjaga agar gambar tidak terpotong */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
+
+        /* Navigasi melayang di bawah */
+        .nav-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            background: #4FA1A9;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-btn:hover { transform: scale(1.1); }
+        .nav-btn.active { background: #011F26; outline: 3px solid #4FA1A9; }
     </style>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
+<body>
 
-    <h2 class="mb-4 text-xl font-bold text-slate-700">Preview hAITerapis</h2>
-
-    <div class="relative bg-black p-3 rounded-[3rem] shadow-2xl w-[320px] h-[650px] border-4 border-gray-800 overflow-hidden">
-        
-        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-28 h-5 bg-black rounded-b-xl z-50"></div>
-
-        <div class="bg-white rounded-[2rem] h-full w-full overflow-hidden relative">
-            
-            <div id="page1" class="page active">
-                <img src="Tampilan-1.png" class="mobile-screen-img">
-            </div>
-
-            <div id="page2" class="page">
-                <img src="Tampilan-2.png" class="mobile-screen-img">
-            </div>
-
-            <div id="page3" class="page">
-                <img src="Tampilan-3.png" class="mobile-screen-img">
-            </div>
-
-            <div id="page4" class="page">
-                <img src="Tampilan-4.png" class="mobile-screen-img">
-            </div>
-
-            <div id="page5" class="page">
-                <img src="Tampilan-5.png" class="mobile-screen-img">
-            </div>
-
-        </div>
-
-        <div class="absolute bottom-5 left-0 w-full flex justify-center gap-2 z-50">
-            <button onclick="changePage(1)" class="w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 border border-white/30 text-white text-xs font-bold backdrop-blur-md">1</button>
-            <button onclick="changePage(2)" class="w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 border border-white/30 text-white text-xs font-bold backdrop-blur-md">2</button>
-            <button onclick="changePage(3)" class="w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 border border-white/30 text-white text-xs font-bold backdrop-blur-md">3</button>
-            <button onclick="changePage(4)" class="w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 border border-white/30 text-white text-xs font-bold backdrop-blur-md">4</button>
-            <button onclick="changePage(5)" class="w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 border border-white/30 text-white text-xs font-bold backdrop-blur-md">5</button>
-        </div>
+    <div id="p1" class="page active">
+        <img src="Tampilan-1.png" class="mobile-img">
     </div>
 
-    <p class="mt-4 text-[10px] text-gray-400">Klik angka untuk ganti halaman</p>
+    <div id="p2" class="page">
+        <img src="Tampilan-2.png" class="mobile-img">
+    </div>
+
+    <div id="p3" class="page">
+        <img src="Tampilan-3.png" class="mobile-img">
+    </div>
+
+    <div id="p4" class="page">
+        <img src="Tampilan-4.png" class="mobile-img">
+    </div>
+
+    <div id="p5" class="page">
+        <img src="Tampilan-5.png" class="mobile-img">
+    </div>
+
+    <div class="nav-container">
+        <button onclick="show(1)" class="nav-btn active" id="btn1">1</button>
+        <button onclick="show(2)" class="nav-btn" id="btn2">2</button>
+        <button onclick="show(3)" class="nav-btn" id="btn3">3</button>
+        <button onclick="show(4)" class="nav-btn" id="btn4">4</button>
+        <button onclick="show(5)" class="nav-btn" id="btn5">5</button>
+    </div>
 
     <script>
-        function changePage(pageNum) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById('page' + pageNum).classList.add('active');
+        function show(n) {
+            // Sembunyikan semua halaman
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Tampilkan halaman yang dipilih
+            document.getElementById('p' + n).classList.add('active');
+
+            // Update warna tombol
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn' + n).classList.add('active');
         }
     </script>
 
